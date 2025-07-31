@@ -45,7 +45,7 @@ def send_lines_in_embeds(lines, filename):
         }
 
         embed = {
-            "title": "RuneScape Bot Log Update",
+            "title": "P2P Log Update",
             "description": f"New entries from `{filename}`",
             "color": 0x7289da,
             "timestamp": now,
