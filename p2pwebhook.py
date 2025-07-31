@@ -13,9 +13,9 @@ CHUNK_LINE_LIMIT = 20  # max lines per embed field
 DISCORD_MENTION = "<@DiscordID>"  # use your actual Discord user ID if needed
 
 def get_latest_log_file():
-    print(f"🔍 Scanning directory: {LOG_DIR}")
+    print(f"Scanning directory: {LOG_DIR}")
     log_files = sorted(LOG_DIR.glob("logfile-*.log"), key=os.path.getmtime, reverse=True)
-    print(f"📦 Found: {[f.name for f in log_files]}")
+    print(f"Found: {[f.name for f in log_files]}")
     return log_files[0] if log_files else None
 
 def parse_log_timestamp(line):
@@ -34,7 +34,7 @@ def send_lines_in_embeds(lines, filename):
 
     now = datetime.utcnow().isoformat()
     chunks = list(split_chunks(lines, CHUNK_LINE_LIMIT))
-    print(f"🧩 Preparing {len(chunks)} embed chunks...")
+    print(f"Preparing {len(chunks)} embed chunks...")
 
     for idx, chunk in enumerate(chunks):
         cleaned = [line.strip() for line in chunk]
@@ -45,7 +45,7 @@ def send_lines_in_embeds(lines, filename):
         }
 
         embed = {
-            "title": "📜 RuneScape Bot Log Update",
+            "title": "RuneScape Bot Log Update",
             "description": f"New entries from `{filename}`",
             "color": 0x7289da,
             "timestamp": now,
@@ -59,19 +59,19 @@ def send_lines_in_embeds(lines, filename):
 
         response = requests.post(WEBHOOK_URL, json=payload)
         if response.status_code != 204:
-            print(f"❌ Failed to send: {response.status_code} - {response.text}")
+            print(f"Failed to send: {response.status_code} - {response.text}")
         else:
-            print(f"✅ Sent embed chunk {idx + 1}/{len(chunks)}")
+            print(f"Sent embed chunk {idx + 1}/{len(chunks)}")
 
 def main():
-    print("🟢 Starting log monitor daemon with Discord embeds...")
+    print("Starting log monitor daemon with Discord embeds...")
     last_file = None
 
     while True:
         try:
             latest = get_latest_log_file()
             if not latest:
-                print("⚠️ No log files found.")
+                print("No log files found.")
                 time.sleep(CHECK_INTERVAL)
                 continue
 
@@ -95,10 +95,10 @@ def main():
                 print(f"📨 Sending {len(recent_lines)} lines from the last 5 minutes to Discord...")
                 send_lines_in_embeds(recent_lines, latest.name)
             else:
-                print("⏸️ No lines in the last 5 minutes.")
+                print("No lines in the last 5 minutes.")
 
         except Exception as e:
-            print(f"💥 Error: {e}")
+            print(f"Error: {e}")
 
         time.sleep(CHECK_INTERVAL)
 
